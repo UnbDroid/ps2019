@@ -1,1 +1,10 @@
 Detalhes sobre a estação "Hacker":
+  Hardware:
+    8 botões;
+    1 monitor;
+    1 Raspberry pi 3 B+.
+  
+  Responsável por:
+    Mostrar uma tela com menu (linha de comando) para interação com usuário;
+    Destravar o programa principal após pressionada uma certa sequência com os botões;
+    Gerar uma rede e ser o servidor de operações da sala.
