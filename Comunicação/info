@@ -1,1 +1,12 @@
 Detalhes sobre a estação "Comunicação":
+  Hardware:
+    2 alto falantes;
+    1 arduino;
+    1 pc com duas saídas de vídeo;
+    1 monitor.
+    
+  Responsável por:
+    Emitir som de "perigo" enquanto as 3 chaves na estação "Cronômetro" não forem abaixadas;
+    Verificar os dados das chaves e do botão de dicas;
+    Repassar as dicas;
+    Mostrar vídeos gerais(?) no próprio monitor e mostrar o cronômetro no monitor da estação "Cronômetro". 
