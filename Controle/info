@@ -1,1 +1,12 @@
 Detalhes sobre a estação "Controle":
+  Hardware:
+    1 potenciômetro;
+    1 teclado matricial de membrana flexível;
+    1 monitor;
+    1 arduino;
+    1 pc com duas saídas de vídeo.
+    
+  Responsável por:
+    Enviar os dados de leitura do potênciometro e do teclado matricial para o monitor;
+    Abrir uma gaveta de acordo com os movimentos de um joystick;
+    Controlar o vídeo do próprio monitor e do projetor.
