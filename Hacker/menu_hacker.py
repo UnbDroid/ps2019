@@ -2,25 +2,25 @@ from os import system
 import subprocess
 from time import sleep
 from termcolor import colored, cprint
-#import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 
-#GPIO.setmode(GPIO.BOARD)
+#clear = lambda: system('clear')
 
-clear = lambda: system('clear')
+botao_vermelho = 37
+botao_azul = 35
+botao_verde = 33
+botao_amarelo = 31
+
+GPIO.setmode(GPIO.BOARD)
+
+GPIO.setup(botao_vermelho, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(botao_azul, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(botao_verde, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(botao_amarelo, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 S = 'oie'
 V = 5
 G = 53
-
-#GPIO.setup(37, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-#GPIO.setup(35, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-#GPIO.setup(33, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-#GPIO.setup(31, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-#GPIO.setup(29, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-#GPIO.setup(40, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-#GPIO.setup(38, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-#GPIO.setup(36, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-
 
 def head():
     n = 3
@@ -41,7 +41,7 @@ def menu_principal():
     system('clear')
     opcao = 0 #Apagar quando for para o rasp
 
-    print("\t\tSeja bem vindo à agencia espacial brasileira, Renatinho")
+    print("\t\tSeja bem vindo à central de controle da agencia espacial brasileira")
     print(" ")
     print("\t\tSou uma inteligencia artificial e estou aqui para realizar seu pedido")
     print(" ")
@@ -52,19 +52,19 @@ def menu_principal():
     print(" ")
     print(" ")
     print(" ")
-    cprint('Vermelho - Informacoes dos funcionarios', 'red')
+    print("\n\033[31m" + "Vermelho - Informacoes dos funcionarios" + "\033[0m\n")
     print(" ")
     print(" ")
     print(" ")
-    cprint('Azul - Informacoes do foguete', 'blue')
+    print("\n\033[34m" + "Azul - Informacoes do foguete" + "\033[0m\n")
     print(" ")
     print(" ")
     print(" ")
-    cprint('Verde - Lancamentos anteriores', 'green')
+    print("\n\033[32m" + "Verde - Lancamentos anteriores" + "\033[0m\n")
     print(" ")
     print(" ")
     print(" ")
-    cprint('Amarelo - Informacoes adicionais', 'yellow')
+    print("\n\033[33m" + "Amarelo - Informacoes adicionais" + "\033[0m\n")
     print(" ")
     print(" ")
     print(" ")
@@ -75,34 +75,38 @@ def menu_principal():
     print(" ")
     print(" ")
     #print("\t\tUsando os botoes redondos, clique em uma cor.")
-    print("\t\tAperte num botão para acessar uma das opcoes acima", end='') #Apagar quando for para o rasp
+    print("\t\tAperte um botão para acessar uma das opcoes acima", end='')
 
-    #while !GPIO.setup() and !GPIO.setup() and !GPIO.setup() and !GPIO.setup(): #Enquanto nenhum botao for pressionado, espera ate apertarem
+    opcao = ''
 
-    while opcao != 1 and opcao != 2 and opcao != 3 and opcao != 4: #Apagar quando for para o rasp
+    while True:
+        if GPIO.input(botao_vermelho):
+            opcao = '1'
+            break
+        if GPIO.input(botao_azul):
+            opcao = '2'
+            break
+        if GPIO.input(botao_verde):
+            opcao = '3'
+            break
+        if GPIO.input(botao_amarelo):
+            opcao = '4'
+            break 
 
-        opcao = input() #Apagar quando for para o rasp
-
-        if(opcao == '1'): #Apagar quando for para o rasp
-        #if GPIO.setup():
-            funcionarios()
-            system('clear')
-            opcao = 0
-        elif(opcao == '2'): #Apagar quando for para o rasp
-        #elif GPIO.setup():
-            foguete()
-            system('clear')
-            opcao = 0
-        elif(opcao == '3'): #Apagar quando for para o rasp
-        #elif GPIO.setup():
-            lacamentos()
-            system('clear')
-            opcao = 0
-        elif(opcao == '4'): #Apagar quando for para o rasp
-        #elif GPIO.setup():
-            informacoes()
-            system('clear')
-            opcao = 0
+    if(opcao == '1'):
+        funcionarios()
+        system('clear')
+    elif(opcao == '2'):
+        foguete()
+        system('clear')
+    elif(opcao == '3'):
+        lacamentos()
+        system('clear')
+        opcao = 0
+    elif(opcao == '4'):
+        informacoes()
+        system('clear')
+        opcao = 0
 
 
 def funcionarios():
@@ -152,8 +156,8 @@ def funcionarios():
     print(" ")
 
     print("Para sair pressione o botao vermelho")
-    input() #Apagar quando for para o rasp
-    #while !GPIO.input():
+    while not GPIO.input(botao_vermelho):
+        pass
     menu_principal()
 
 
@@ -170,24 +174,24 @@ def foguete():
     print(" quarto estágio, coifa ejetável, redes elétricas e redes pirotécnicas.")
     print(" ")
     print(" ")
-    print("As suas principais características são:")
-    print("\t\tNúemro de estágios: 4")
+    print("As suas principais caracteristicas sao:")
+    print("\t\tNumero de estagios: 4")
     print("\t\tComprimento total: 19.7m")
-    print("\t\tDiâmetro dos propulsores: 1m")
+    print("\t\tDiametro dos propulsores: 1m")
     print("\t\tMassa total: 50 T")
-    print("\t\tMassa de propelento do 1° estágio: 38.6 T (4 propulsores S 43)")
-    print("\t\tMassa de propelento do 2° estágio: 7.2 T (1 propulsores S 43)")
-    print("\t\tMassa de propelento do 3° estágio: 4.4 T (1 propulsores S 40)")
-    print("\t\tMassa de propelento do 4° estágio: 0.8 T (1 propulsores S 44)")
-    print("\t\tCarga útil (média): 200 kg")
-    print("\t\tÓrbita média: 750 km")
-    print("\t\tPropelente Sólido Perclorato de Amônio, Polibutadieno e Alumínio pó")
+    print("\t\tMassa de propelento do 1° estagio: 38.6 T (4 propulsores S 43)")
+    print("\t\tMassa de propelento do 2° estagio: 7.2 T (1 propulsor S 43)")
+    print("\t\tMassa de propelento do 3° estagio: 4.4 T (1 propulsor S 40)")
+    print("\t\tMassa de propelento do 4° estagio: 0.8 T (1 propulsor S 44)")
+    print("\t\tCarga util (media): 200 kg")
+    print("\t\tÓrbita media: 750 km")
+    print("\t\tPropelente Solido Perclorato de Amonio, Polibutadieno e Aluminio po")
     print(" ")
     print(" ")
     print(" ")
     print("Para sair pressione o botao azul")
-    input() #Apagar quando for para o ras
-    #while !GPIO.input():
+    while not GPIO.input(botao_azul):
+        pass
     menu_principal()
 
 def lacamentos():
@@ -238,8 +242,8 @@ def lacamentos():
     print(" ")
     print(" ")
     print("Para sair pressione o botao verde")
-    input() #Apagar quando for para o rasp
-    #while !GPIO.input():
+    while not GPIO.input():
+        pass
     menu_principal()
 
 def informacoes():
@@ -249,14 +253,11 @@ def informacoes():
     print(" ")
     print(" ")
     print("Para sair pressione o botao amarelo")
-    input() #Apagar quando for para o rasp
-    #while !GPIO.input():
+    while not GPIO.input(botao_amarelo):
+        pass
     menu_principal()
-
-
-
 
 if __name__ == "__main__":
     head()
-    clear()
+    system('clear')
     menu_principal()

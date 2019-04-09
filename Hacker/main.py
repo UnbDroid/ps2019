@@ -16,8 +16,6 @@ GPIO.setmode(GPIO.BOARD)
 
 x = 0
 
-#clear = lambda : system('clear')
-
 GPIO.setup(botao_0, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(botao_1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(botao_2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
@@ -43,7 +41,7 @@ try:
 	GPIO.output(led, GPIO.LOW)
 	last_time = time.time()
 	while x<8:
-		if time.time() - last_time > 5:
+		if time.time() - last_time > 5: #Verificar esse tempo
 			reset = True
 		if reset is True:
 			system('clear')
@@ -155,6 +153,7 @@ try:
 				GPIO.output(led, GPIO.HIGH)
 				time.sleep(0.4)
 				GPIO.output(led, GPIO.LOW)
+	GPIO.cleanup()
 
 except KeyboardInterrupt:
 	print("Fugiu ne?")
