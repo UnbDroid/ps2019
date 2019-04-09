@@ -30,8 +30,7 @@ GPIO.setup(led, GPIO.OUT)
 
 sequence = [botao_5, botao_3, botao_7, botao_4, botao_1, botao_2, botao_6, botao_0]
 
-changed = True
-
+reset = True
 
 def not_right(x, i):
 	if(i<x):
@@ -42,104 +41,116 @@ def not_right(x, i):
 
 try:
 	GPIO.output(led, GPIO.LOW)
+	last_time = time.time()
 	while x<8:
-		if changed is True:
-			
-			changed = False
+		if time.time() - last_time > 5:
+			reset = True
+		if reset is True:
+			system('clear')
+			last_time = time.time()
+			reset = False
 			print("HAHAHA you didn't say the magic word...")
 								
 		if x == 0:
 			if GPIO.input(sequence[x]) == 1:
-				
+				system('clear')
 				print("Voce nunca conseguira descobrir a sequencia correta...")
 				x = 1
+				last_time = time.time()
 				time.sleep(0.4)
 			elif GPIO.input(not_right(x, 0)) or GPIO.input(not_right(x, 1)) or GPIO.input(not_right(x, 2)) or GPIO.input(not_right(x, 3)) or GPIO.input(not_right(x, 4)) or GPIO.input(not_right(x, 5)) or GPIO.input(not_right(x, 6)):
-				changed = True
+				reset = True
 				x = 0
 				GPIO.output(led, GPIO.HIGH)
 				time.sleep(0.4)
 				GPIO.output(led, GPIO.LOW)
 		if x == 1:
 			if GPIO.input(sequence[x]) == 1:
-				
+				system('clear')
 				print("Suas tentativas sao em vao...")
 				x = 2
+				last_time = time.time()
 				time.sleep(0.4)
 			elif GPIO.input(not_right(x, 0)) or GPIO.input(not_right(x, 1)) or GPIO.input(not_right(x, 2)) or GPIO.input(not_right(x, 3)) or GPIO.input(not_right(x, 4)) or GPIO.input(not_right(x, 5)) or GPIO.input(not_right(x, 6)):
-				changed = True
+				reset = True
 				x = 0
 				GPIO.output(led, GPIO.HIGH)
 				time.sleep(0.4)
 				GPIO.output(led, GPIO.LOW)
 		if x == 2:
 			if GPIO.input(sequence[x]) == 1:
-				
+				system('clear')
 				print("Ta frio...")
 				x = 3
+				last_time = time.time()
 				time.sleep(0.4)
 			elif GPIO.input(not_right(x, 0)) or GPIO.input(not_right(x, 1)) or GPIO.input(not_right(x, 2)) or GPIO.input(not_right(x, 3)) or GPIO.input(not_right(x, 4)) or GPIO.input(not_right(x, 5)) or GPIO.input(not_right(x, 6)):
-				changed = True
+				reset = True
 				x = 0
 				GPIO.output(led, GPIO.HIGH)
 				time.sleep(0.4)
 				GPIO.output(led, GPIO.LOW)
 		if x == 3:
 			if GPIO.input(sequence[x]) == 1:
-				
+				system('clear')
 				print("Voces vao mesmo deixar o foguete explodir?")
 				x = 4
+				last_time = time.time()
 				time.sleep(0.4)
 			elif GPIO.input(not_right(x, 0)) or GPIO.input(not_right(x, 1)) or GPIO.input(not_right(x, 2)) or GPIO.input(not_right(x, 3)) or GPIO.input(not_right(x, 4)) or GPIO.input(not_right(x, 5)) or GPIO.input(not_right(x, 6)):
-				changed = True
+				reset = True
 				x = 0
 				GPIO.output(led, GPIO.HIGH)
 				time.sleep(0.4)
 				GPIO.output(led, GPIO.LOW)
 		if x == 4:
 			if GPIO.input(sequence[x]) == 1:
-				
+				system('clear')
 				print("As mentes brilhantes do Brasil nao sao de nada...")
 				x = 5
+				last_time = time.time()
 				time.sleep(0.4)
 			elif GPIO.input(not_right(x, 0)) or GPIO.input(not_right(x, 1)) or GPIO.input(not_right(x, 2)) or GPIO.input(not_right(x, 3)) or GPIO.input(not_right(x, 4)) or GPIO.input(not_right(x, 5)) or GPIO.input(not_right(x, 6)):
-				changed = True
+				reset = True
 				x = 0
 				GPIO.output(led, GPIO.HIGH)
 				time.sleep(0.4)
 				GPIO.output(led, GPIO.LOW)
 		if x == 5:
 			if GPIO.input(sequence[x]) == 1:
-				
+				system('clear')
 				print("Pare de tentar isso...")
 				x = 6
+				last_time = time.time()
 				time.sleep(0.4)
 			elif GPIO.input(not_right(x, 0)) or GPIO.input(not_right(x, 1)) or GPIO.input(not_right(x, 2)) or GPIO.input(not_right(x, 3)) or GPIO.input(not_right(x, 4)) or GPIO.input(not_right(x, 5)) or GPIO.input(not_right(x, 6)):
-				changed = True
+				reset = True
 				x = 0
 				GPIO.output(led, GPIO.HIGH)
 				time.sleep(0.4)
 				GPIO.output(led, GPIO.LOW)
 		if x == 6:
 			if GPIO.input(sequence[x]) == 1:
-				
+				system('clear')
 				print("Se voce errar agora todo mundo morrera!")
 				x = 7
+				last_time = time.time()
 				time.sleep(0.4)
 			elif GPIO.input(not_right(x, 0)) or GPIO.input(not_right(x, 1)) or GPIO.input(not_right(x, 2)) or GPIO.input(not_right(x, 3)) or GPIO.input(not_right(x, 4)) or GPIO.input(not_right(x, 5)) or GPIO.input(not_right(x, 6)):
-				changed = True
+				reset = True
 				x = 0
 				GPIO.output(led, GPIO.HIGH)
 				time.sleep(0.4)
 				GPIO.output(led, GPIO.LOW)
 		if x == 7:
 			if GPIO.input(sequence[x]) == 1:
-				
+				system('clear')
 				print("Aaaaarrghh, voce passou por isso, mas o foguete ainda explodira...")
 				x = 8
+				last_time = time.time()
 				time.sleep(0.4)
-				changed = True
 			elif GPIO.input(not_right(x, 0)) or GPIO.input(not_right(x, 1)) or GPIO.input(not_right(x, 2)) or GPIO.input(not_right(x, 3)) or GPIO.input(not_right(x, 4)) or GPIO.input(not_right(x, 5)) or GPIO.input(not_right(x, 6)):
+				reset = True
 				x = 0
 				GPIO.output(led, GPIO.HIGH)
 				time.sleep(0.4)
