@@ -1,5 +1,4 @@
 from os import system
-import subprocess
 from time import sleep
 import RPi.GPIO as GPIO
 
@@ -114,6 +113,9 @@ def menu_principal():
 
 
 def funcionarios():
+    while GPIO.input(botao_vermelho):
+        pass
+
     system('clear')
     print("Funcionarios:")
     print(" ")
@@ -168,6 +170,9 @@ def funcionarios():
 
 
 def foguete():
+    while GPIO.input(botao_azul):
+        pass
+
     system('clear')
     print("E um veiculo lancador de satelites que utiliza motores-foguetes carregados com propelente solido")
     print(" do tipo composite (perclorato de amonio, aluminio em po e polibutadieno) em todos os estagios,")
@@ -201,6 +206,9 @@ def foguete():
     menu_principal()
 
 def lacamentos():
+    while GPIO.input(botao_verde):
+        pass
+
     system('clear')
     print(" 21 de Fevereiro de 1990 -> Sonda 2 XV-53 -> Alcantara Ionosfera -> 101 km")
     print(" ")
@@ -254,6 +262,9 @@ def lacamentos():
     menu_principal()
 
 def informacoes():
+    while GPIO.input(botao_amarelo):
+        pass
+
     system('clear')
     print("Informacoes extras")
     print(" ")
