@@ -10,6 +10,7 @@ import serial
 import cv2
 import numpy as np
 import pygame
+import texts
 
 # Variavel global de leitura
 data = ""
@@ -31,6 +32,7 @@ file_name = ""
 def clear_screen():
     os.system("clear")
 
+# Responsavel por firmalizar a conexao com o servidor
 def get_conn():
 	global data
 
@@ -57,26 +59,6 @@ def get_conn():
 		else:
 			print "Erro na conexao!"
 			return False	
-"""
-def file_send():
-	# Save file_name
-	global file_name
-	local_file_name = file_name # In case the user tries to send another file
-	
-	my_file = open(local_file_name, 'r')
-	
-	msg = "-file"
-	while msg != "":
-		msg = my_file.read(1019)
-		if msg != "":
-			msg = "-file" + msg
-			client_socket.send(msg)
-			time.sleep(1)
-			
-	client_socket.send("--file")		
-	my_file.close()		
-"""
-
 
 def number_print(number):
     number = str(number)
@@ -106,6 +88,7 @@ def arduino_read(Station_name):
     global final_result
     global last_switch
     global need_help
+    global response
 
     try:
         arduinoSerial = serial.Serial('/../../dev/ttyUSB0', 9600)
@@ -230,40 +213,41 @@ def get_answer(Station_name):
 def play_time(e, s):
     cap = cv2.VideoCapture('chronos.mp4') # Path to the video of the chronometer
 
+    cv2.namedWindow('Tempo', cv2.WINDOW_NORMAL)
+
     ret, frame = cap.read()
 
     if ret == True:
-        cv2.imshow('Tempo', frame)
-
-    e.wait()
+        while not e.isSet():
+            cv2.imshow('Tempo', frame)
+            cv2.waitKey(100)
 
     while cap.isOpened():
         ret, frame = cap.read()
 
         if s.isSet():
             while True:
+                print("Maintaining video")
                 pass
 
         if ret == True:
             cv2.imshow('Tempo', frame)
-
-            if cv2.waitKey():
-                break
+            cv2.waitKey(100)
         else:
             break
-
-    s.isSet()
 
     cap.release()        
 
 def __draw_label(img, text, pos, bg_color):
     font_face = cv2.FONT_HERSHEY_SIMPLEX
-    scale = 0.4
-    color = (0, 0, 0)
+    scale = 1
+    color = (255, 255, 255)
     thickness = cv2.FILLED
     margin = 2
 
     txt_size = cv2.getTextSize(text, font_face, scale, thickness)
+
+    pos = (pos[0] - txt_size[0][0]/2 - margin/2, pos[1] + txt_size[0][1]/2 + margin/2)
 
     end_x = pos[0] + txt_size[0][0] + margin
     end_y = pos[1] - txt_size[0][1] - margin
@@ -275,14 +259,16 @@ def play_rocket(e, s, r, a):
     global data
     siren = True
     
+    cv2.namedWindow('Comunicacao', cv2.WINDOW_NORMAL)
+
     cap = cv2.VideoCapture('Imersao_final.mp4') # Path to the first video
 
     ret, frame = cap.read()
 
     if ret == True:
-        cv2.imshow('Comunicacao', frame)
-
-    e.wait()
+        while not e.isSet():
+            cv2.imshow('Comunicacao', frame)
+            cv2.waitKey(35)
 
     # Begin of first video
 
@@ -299,8 +285,7 @@ def play_rocket(e, s, r, a):
         if ret == True:
             cv2.imshow('Comunicacao', frame)
 
-            if cv2.waitKey():
-                break
+            cv2.waitKey(35)
         else:
             break
 
@@ -319,8 +304,7 @@ def play_rocket(e, s, r, a):
         if ret == True:
             cv2.imshow('Comunicacao', frame)
 
-            if cv2.waitKey():
-                break
+            cv2.waitKey(35)
         else:
             break
 
@@ -330,7 +314,7 @@ def play_rocket(e, s, r, a):
 
     # Begin of third video
     # Start big siren audio
-    pygame.mixer.music.load('sirene.awv')
+    pygame.mixer.music.load('sirene.wav')
     pygame.mixer.music.play()
 
     while cap.isOpened():
@@ -339,17 +323,21 @@ def play_rocket(e, s, r, a):
         if ret == True:
             cv2.imshow('Comunicacao', frame)
 
+            # Checks for ending flag
             if s.isSet():
                 break
 
+            # Checks the help flag
             if r.isSet():
-                frame = np.zeros(frame.shape[0], frame.shape[1], frame.shape[2])
+                # Make a black screen the size of the screen we are using
+                frame = np.zeros((frame.shape[0], frame.shape[1], frame.shape[2]), np.uint8)
 
-                __draw_label(np.zerosframe, data, (20,20), (255,0,0))
+                # Draw a label in the message
+                __draw_label(frame, data, (20,20), (255,0,0))
 
                 cv2.imshow('Comunicacao', frame)
-
-                time.sleep(10)
+                cv2.waitKey(8000)
+                r.clear()
 
             if a.isSet() and siren == True:
                 # Change to other audio
@@ -357,8 +345,7 @@ def play_rocket(e, s, r, a):
                 pygame.mixer.music.play()
                 siren = False        
 
-            if cv2.waitKey():
-                break
+            cv2.waitKey(40)
         else:
             break
 
@@ -380,8 +367,7 @@ def play_rocket(e, s, r, a):
         if ret == True:
             cv2.imshow('Comunicacao', frame)
 
-            if cv2.waitKey():
-                break
+            cv2.waitKey(40)
         else:
             break
 
@@ -389,6 +375,9 @@ def play_rocket(e, s, r, a):
 
 # Checa se e o modulo principal chamado
 if __name__ == "__main__":
+    #
+    #   Begin of Client Setup
+    #
 
     if len(sys.argv) == 3:
         # Usuario informou o IP e a porta
@@ -407,6 +396,10 @@ if __name__ == "__main__":
     # Configura o socket orientado a conexoes TCP
     station_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+    #
+    #   End of Client Setup
+    #
+
     # Tentativa de se conectar ao servidor
     try:
         station_socket.connect((host, port))	# Try connection
@@ -417,6 +410,8 @@ if __name__ == "__main__":
     clear_screen()
     print "Conectado ao servidor."
     time.sleep(1)
+
+    # Leitura do nome (funcao) do PC que esta se conectando
 
     possibles = ['1', '2', '3', '4', '5', '6']
     Station_name = ""
@@ -450,20 +445,23 @@ if __name__ == "__main__":
 
     # Conexao sucedida
 
-    # Comeca uma thread pra ficar lendo
+    # Comeca uma thread pra ficar lendo dados do servidor
     thread_read = threading.Thread(target=get_answer, args=[Station_name])
     thread_read.start()
 
+    # Eventos que controlam threads
     e = threading.Event() # Flag para iniciar
     s = threading.Event() # Flag para finalizar e chavear videos
     r = threading.Event() # Flag para mostrar dica na tela
     a = threading.Event() # Flag para chavear audio
 
+    # Estacao de cronometro comeca o video para posicionamento na tela e espera pelo evento de iniciar
     if '4' in Station_name:
         # Start the thread with the cronometer video
-        thread_chonos = threading.Thread(target=play_time, args=[e, s])
+        thread_chronos = threading.Thread(target=play_time, args=[e, s])
         thread_chronos.start()
 
+    # Estacao de comunicacao comeca a sequencia de videos para posicionamento na tela e espera pelo evento de iniciar
     if '2' in Station_name:
         # Start the screen with the start and rocket videos
         thread_rocket = threading.Thread(target=play_rocket, args=[e, s, r, a])
@@ -473,19 +471,18 @@ if __name__ == "__main__":
     if '6' not in Station_name:
         answered = 0
         while answered == 0 or start == False:
+            #print(str(answered) + str(start))
             pass
 
         # Awaken both videos, chronometer and rocket
         e.set()
 
-    result = ""
-
-    # Starts a thread in the control pc and wont leave until it sends the end signal
+    # Starts a thread in the control pc and wont leave until it sends the end signal, result is saved "final_result"
     if '3' in Station_name:
         thread_serial_arduino = threading.Thread(target=arduino_read, args=[Station_name])
         thread_serial_arduino.start()
         thread_serial_arduino.join()
-        print(final_result)
+        #print(final_result)
 
     while True:
         # Estado idle infinito
@@ -493,20 +490,23 @@ if __name__ == "__main__":
         # Marca que nao foi respondido e nao esta esperando
         answered = -1
 
+        # Estacao de cronometro verificacao de continuacao
         if '4' in Station_name:
             # Stop chronometer
             if stop == True:
-                s.set()
+                s.set() # Evento para pausar o video
                 while True:
                     pass
 
+        # Estacao de controle verificacao de continuacao
         if '3' in Station_name:
             # Freeze screen with current data
             if stop == True:
-                s.set()
+                s.set() # Evento para pausar a tela
                 while True:
                     pass
 
+        # Estacao de comunicacao verificacao de continuacao
         if '2' in Station_name:
             # Reads arduino serial until a change in the switches ir detected or they ask for help
             thread_serial_arduino = threading.Thread(target=arduino_read, args=[Station_name])
@@ -517,11 +517,15 @@ if __name__ == "__main__":
         try:
             if '2' in Station_name:
                 # Envia uma mensagem de dicas ou valor dos switches
+                
+                # Pedido de dicas
                 if need_help == True:
                     station_socket.send("d1")
                     need_help = False
                 elif response == True:
                     # Do the transition between videos and print the 'data' variable
+                    
+                    # Sets the flags that start the event that switch videos and show the help message
                     r.set()
                     response = False
                 else:
@@ -539,6 +543,7 @@ if __name__ == "__main__":
                 msg = ""
                 while not msg:
                     msg = raw_input("$: ")
+                station_socket.send("%s" % msg)
 
             # Waiting for answer
             answered = 0
