@@ -25,7 +25,7 @@ try:
         if ret == True:
             cv2.imshow('Comunicacao', frame)
 
-            cv2.waitKey(35)
+            cv2.waitKey(39)
         else:
             break
 
