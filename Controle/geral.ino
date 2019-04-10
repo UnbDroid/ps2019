@@ -50,13 +50,16 @@ int right = 0;
 int down = 0;
 int left = 0;
 int sequence = 0;
-long int last_result = 0;
-int edge=0;
+int last_result = 0;
 int right_sequence[max_sequence] = {UP, UP, DOWN, DOWN, RIGHT, LEFT};
+long int last_move_timestamp = 0;
 
 /* Valores relacionados as leituras do potenciometro */
 int valor = 0; // Valor de leitura do potenciometro
 byte b_valor = 0; // Valor em byte para ser enviado
+
+/* Valores para abertura da gaveta */
+long int open_up = 0;
 
 /* Valor de final da sala */
 volatile bool the_end = false;
@@ -127,7 +130,13 @@ void joystick_check(){
   
   if(sequence == max_sequence){
     // Abrir gaveta
-    digitalWrite(gaveta, HIGH);
+    if(open_up == 0){
+      digitalWrite(gaveta, HIGH);
+      open_up = millis();
+    }
+    if(millis()-open_up > 2000){
+      digitalWrite(gaveta, LOW);
+    }
     return;
   }
   
@@ -138,10 +147,6 @@ void joystick_check(){
 
   int result = up | right | down | left;
 
-  if(result != last_result){
-    edge = 1;  
-  }
-
   //Serial.print("Resultado: ");
   //Serial.println(result);
   //Serial.print("Sequencia certa: ");
@@ -149,7 +154,7 @@ void joystick_check(){
   //Serial.print("Valor sequencia: ");
   //Serial.println(sequence);
   
-  if(result && edge){
+  if(result && last_result != result){
     if(right_sequence[sequence] & result){
       sequence++;
     }
@@ -157,7 +162,13 @@ void joystick_check(){
       sequence = 0;
     }
     last_result = result;
-    edge = 0;
+    last_move_timestamp = millis();
+  }
+  else{
+    if(millis-last_move_timestamp > 3000){
+      sequence = 0;
+      last_move_timestamp = millis();
+    }
   }
 }
 
