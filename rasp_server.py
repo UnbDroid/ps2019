@@ -81,6 +81,7 @@ def send_error(sock):
 def send_ok(sock):
 	sock.send("Ok")	
 
+# RETIRAR USUARIOS QUE JA SE DESCONECTARAM
 def Broadcast(msg):
     for i in range(len(Stations)):
         Stations[i].conn.send(msg)
@@ -124,44 +125,60 @@ file_reading = False
 file_name = ""
 file_info = ""
 """
+def send_specific(msg, usr):
+    for i in range(len(Stations)):
+		if usr in Stations[i].sname:
+			Stations[i].conn.send(msg)	
+
 def conecta(sock):
     # Conecta com um cliente
 
     # Checa se recebeu um nome
-    sname = ""
-    sname = receive_name(sock)
+	sname = ""
+	sname = receive_name(sock)
 
-    global file_reading
-    global file_name
-    global file_info
+	global file_reading
+	global file_name
+	global file_info
 
-    if sname == "":
+	if sname == "":
         # Fail in receiving name
-        send_error(sock)
-    else:
-        send_ok(sock)
+		send_error(sock)
+	else:
+		send_ok(sock)
 
     # Insere essa estacao na lista de estacoes conectadas
-    Stations.append(Station(sock.getpeername()[0], sock.getpeername()[1], sname, sock))
+	Stations.append(Station(sock.getpeername()[0], sock.getpeername()[1], sname, sock))
 
     # # Guarda o index atual do usuario correspondente a esta thread
     # idx = len(Users) - 1
 
-    while True:
+	while True:
         # Escuta a conexao infinitamente
-        ready = select.select([sock], [], [])
-        if ready[0]:
-            data = sock.recv(256)
+		ready = select.select([sock], [], [])
+		if ready[0]:
+			data = sock.recv(256)
 
-            print(data)
+			print(data)
 
-            if data == "":
-                print("Conexao finalizada repentinamente pelo usuario!")
-                break
+			if data == "":
+				print("Conexao finalizada repentinamente pelo usuario!")
+				break
 
-            else:
-                print("trying to broadcast")
-                Broadcast(data)
+			elif data == "start":
+				Broadcast(data)
+
+			elif data[0] == 'e':
+				send_specific("stop", '3')
+				send_specific("stop", '4')
+				send_specific('e'+data[1], '2')
+
+			elif data[0] == 'd':
+				send_ok(sock)
+				send_specific("d1", '6')
+
+			else:
+				Broadcast(data)
 
 		# 		# Lista as salas	
 		# 		if data[0:2] == "-l":
