@@ -7,6 +7,8 @@ import time
 import os
 import threading
 import cv2
+#import pygame
+#import 
 
 # Variavel de porta do arduino
 arduino_port = '/../../dev/ttyUSB0'
