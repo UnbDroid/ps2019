@@ -45,151 +45,151 @@ def print_angle():
 
 
 def print_0_1():
-    print("""  ___   """, end="")
+    print("""  ___   """,)
 def print_0_2():
-    print(""" / _ \  """, end="")
+    print(""" / _ \  """,)
 def print_0_3():
-    print("""| | | | """, end="")
+    print("""| | | | """,)
 def print_0_4():
-    print("""| | | | """, end="")
+    print("""| | | | """,)
 def print_0_5():
-    print("""| |_| | """, end="")
+    print("""| |_| | """,)
 def print_0_6():
-    print(""" \___/  """, end="")
+    print(""" \___/  """,)
 def print_0_7():
-    print("""        """, end="")
+    print("""        """,)
 
 def print_1_1():
-    print(""" __  """, end="")
+    print(""" __  """,)
 def print_1_2():
-    print("""/_ | """, end="")
+    print("""/_ | """,)
 def print_1_3():
-    print(""" | | """, end="")
+    print(""" | | """,)
 def print_1_4():
-    print(""" | | """, end="")
+    print(""" | | """,)
 def print_1_5():
-    print(""" | | """, end="")
+    print(""" | | """,)
 def print_1_6():
-    print(""" |_| """, end="")
+    print(""" |_| """,)
 def print_1_7():
-    print("""     """, end="")
+    print("""     """,)
 
 def print_2_1():
-    print(""" ___   """, end="")
+    print(""" ___   """,)
 def print_2_2():
-    print("""|__ \  """, end="")
+    print("""|__ \  """,)
 def print_2_3():
-    print("""   ) | """, end="")
+    print("""   ) | """,)
 def print_2_4():
-    print("""  / /  """, end="")
+    print("""  / /  """,)
 def print_2_5():
-    print(""" / /_  """, end="")
+    print(""" / /_  """,)
 def print_2_6():
-    print("""|____| """, end="")
+    print("""|____| """,)
 def print_2_7():
-    print("""       """, end="")
+    print("""       """,)
 
 def print_3_1():
-    print(""" ____   """, end="")
+    print(""" ____   """,)
 def print_3_2():
-    print("""|___ \  """, end="")
+    print("""|___ \  """,)
 def print_3_3():
-    print("""  __) | """, end="")
+    print("""  __) | """,)
 def print_3_4():
-    print(""" |__ <  """, end="")
+    print(""" |__ <  """,)
 def print_3_5():
-    print(""" ___) | """, end="")
+    print(""" ___) | """,)
 def print_3_6():
-    print("""|____/  """, end="")
+    print("""|____/  """,)
 def print_3_7():
-    print("""        """, end="")
+    print("""        """,)
 
 def print_4_1():
-    print(""" _  _    """, end="")
+    print(""" _  _    """,)
 def print_4_2():
-    print("""| || |   """, end="")
+    print("""| || |   """,)
 def print_4_3():
-    print("""| || |_  """, end="")
+    print("""| || |_  """,)
 def print_4_4():
-    print("""|__   _| """, end="")
+    print("""|__   _| """,)
 def print_4_5():
-    print("""   | |   """, end="")
+    print("""   | |   """,)
 def print_4_6():
-    print("""   |_|   """, end="")
+    print("""   |_|   """,)
 def print_4_7():
-    print("""         """, end="")
+    print("""         """,)
 
 def print_5_1():
-    print(""" _____  """, end="")
+    print(""" _____  """,)
 def print_5_2():
-    print("""| ____| """, end="")
+    print("""| ____| """,)
 def print_5_3():
-    print("""| |__   """, end="")
+    print("""| |__   """,)
 def print_5_4():
-    print("""|___ \  """, end="")
+    print("""|___ \  """,)
 def print_5_5():
-    print(""" ___) | """, end="")
+    print(""" ___) | """,)
 def print_5_6():
-    print("""|____/  """, end="")
+    print("""|____/  """,)
 def print_5_7():
-    print("""        """, end="")
+    print("""        """,)
 
 def print_6_1():
-    print("""   __   """, end="")
+    print("""   __   """,)
 def print_6_2():
-    print("""  / /   """, end="")
+    print("""  / /   """,)
 def print_6_3():
-    print(""" / /_   """, end="")
+    print(""" / /_   """,)
 def print_6_4():
-    print("""| '_ \  """, end="")
+    print("""| '_ \  """,)
 def print_6_5():
-    print("""| (_) | """, end="")
+    print("""| (_) | """,)
 def print_6_6():
-    print(""" \___/  """, end="")
+    print(""" \___/  """,)
 def print_6_7():
-    print("""        """, end="")
+    print("""        """,)
 
 def print_7_1():
-    print(""" ______  """, end="")
+    print(""" ______  """,)
 def print_7_2():
-    print("""|____  | """, end="")
+    print("""|____  | """,)
 def print_7_3():
-    print("""    / /  """, end="")
+    print("""    / /  """,)
 def print_7_4():
-    print("""   / /   """, end="")
+    print("""   / /   """,)
 def print_7_5():
-    print("""  / /    """, end="")
+    print("""  / /    """,)
 def print_7_6():
-    print(""" /_/     """, end="")
+    print(""" /_/     """,)
 def print_7_7():
-    print("""         """, end="")
+    print("""         """,)
 
 def print_8_1():
-    print("""  ___   """, end="")
+    print("""  ___   """,)
 def print_8_2():
-    print(""" / _ \  """, end="")
+    print(""" / _ \  """,)
 def print_8_3():
-    print("""| (_) | """, end="")
+    print("""| (_) | """,)
 def print_8_4():
-    print(""" > _ <  """, end="")
+    print(""" > _ <  """,)
 def print_8_5():
-    print("""| (_) | """, end="")
+    print("""| (_) | """,)
 def print_8_6():
-    print(""" \___/  """, end="")
+    print(""" \___/  """,)
 def print_8_7():
-    print("""        """, end="")
+    print("""        """,)
 
 def print_9_1():
-    print("""  ___   """, end="")
+    print("""  ___   """,)
 def print_9_2():
-    print(""" / _ \  """, end="")
+    print(""" / _ \  """,)
 def print_9_3():
-    print("""| (_) | """, end="")
+    print("""| (_) | """,)
 def print_9_4():
-    print(""" \__, | """, end="")
+    print(""" \__, | """,)
 def print_9_5():
-    print("""   / /  """, end="")
+    print("""   / /  """,)
 def print_9_6():
-    print("""  /_/   """, end="")
+    print("""  /_/   """,)
 def print_9_7():
-    print("""        """, end="")
+    print("""        """,)

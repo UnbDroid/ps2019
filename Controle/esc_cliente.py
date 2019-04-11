@@ -6,28 +6,20 @@ import sys
 import time
 import os
 import threading
-import serial 
 import cv2
-import numpy as np
-import pygame
-import texts
 
-# Variavel global de leitura
-data = ""
-
-final_result = ""
-
-last_switch = '1'
-
-start = False
-stop = False
-need_help = False
-response = False
+# Variavel de porta do arduino
+arduino_port = '/../../dev/ttyUSB0'
 
 # Global variables
-close = False
-
-file_name = ""
+final_result = ""   # Result of end-game button
+last_switch = '1'   # Result of 3 switches to control lamp
+start = False       # Start of the room
+stop = False        # Stop of the room
+need_help = False   # Asking for help
+response = False    # Response for help
+close = False       # Close connection
+data = ""           # Data transmisted between sockets
 
 def clear_screen():
     os.system("clear")
@@ -85,13 +77,22 @@ def update_screen_info(ang, vel):
     number_print(angle)
 
 def arduino_read(Station_name):
+    try:
+        import serial
+    except:
+        # Probably already imported
+        pass    
+    if '3' in Station_name:
+        import texts
+
     global final_result
     global last_switch
     global need_help
     global response
+    global arduino_port
 
     try:
-        arduinoSerial = serial.Serial('/../../dev/ttyUSB0', 9600)
+        arduinoSerial = serial.Serial(arduino_port, 9600)
     except serial.SerialException:
         # Probably already configured
         pass
@@ -210,24 +211,27 @@ def get_answer(Station_name):
         except IOError:
             break	
 
-def play_time(e, s):
+def play_time(end_room, start_timer):
     cap = cv2.VideoCapture('chronos.mp4') # Path to the video of the chronometer
 
     cv2.namedWindow('Tempo', cv2.WINDOW_NORMAL)
 
+    # Get 3 frames to position the window
+    ret, frame = cap.read()
+    ret, frame = cap.read()
     ret, frame = cap.read()
 
     if ret == True:
-        while not e.isSet():
+        while not start_timer.isSet():
             cv2.imshow('Tempo', frame)
             cv2.waitKey(100)
 
     while cap.isOpened():
         ret, frame = cap.read()
 
-        if s.isSet():
+        if end_room.isSet():
             while True:
-                print("Maintaining video")
+                # Hold video position
                 pass
 
         if ret == True:
@@ -255,7 +259,10 @@ def __draw_label(img, text, pos, bg_color):
     cv2.rectangle(img, pos, (end_x, end_y), bg_color, thickness)
     cv2.putText(img, text, pos, font_face, scale, color, 1, cv2.LINE_AA)
 
-def play_rocket(e, s, r, a):
+def play_rocket(start_room, end_room, show_tip, stop_siren, start_timer):
+    import pygame
+    import numpy as np
+
     global data
     siren = True
     
@@ -266,7 +273,7 @@ def play_rocket(e, s, r, a):
     ret, frame = cap.read()
 
     if ret == True:
-        while not e.isSet():
+        while not start_room.isSet():
             cv2.imshow('Comunicacao', frame)
             cv2.waitKey(35)
 
@@ -310,6 +317,8 @@ def play_rocket(e, s, r, a):
 
     # End of second video
 
+    start_timer.set()
+
     cap = cv2.VideoCapture('Aguarda_lancamento.mp4') # Path to the third video
 
     # Begin of third video
@@ -323,12 +332,17 @@ def play_rocket(e, s, r, a):
         if ret == True:
             cv2.imshow('Comunicacao', frame)
 
+            # Restart the sound if it stops
+            if not pygame.mixer.music.get_busy():
+                pygame.mixer.music.rewind()
+                pygame.mixer.music.play()
+
             # Checks for ending flag
-            if s.isSet():
+            if end_room.isSet():
                 break
 
             # Checks the help flag
-            if r.isSet():
+            if show_tip.isSet():
                 # Make a black screen the size of the screen we are using
                 frame = np.zeros((frame.shape[0], frame.shape[1], frame.shape[2]), np.uint8)
 
@@ -337,9 +351,9 @@ def play_rocket(e, s, r, a):
 
                 cv2.imshow('Comunicacao', frame)
                 cv2.waitKey(8000)
-                r.clear()
+                show_tip.clear()
 
-            if a.isSet() and siren == True:
+            if stop_siren.isSet() and siren == True:
                 # Change to other audio
                 pygame.mixer.music.load('Aguarda_lancamento.wav')
                 pygame.mixer.music.play()
@@ -450,22 +464,23 @@ if __name__ == "__main__":
     thread_read.start()
 
     # Eventos que controlam threads
-    e = threading.Event() # Flag para iniciar
-    s = threading.Event() # Flag para finalizar e chavear videos
-    r = threading.Event() # Flag para mostrar dica na tela
-    a = threading.Event() # Flag para chavear audio
+    start_room = threading.Event()  # Flag para iniciar
+    end_room = threading.Event()    # Flag para finalizar e chavear videos
+    show_tip = threading.Event()    # Flag para mostrar dica na tela
+    stop_siren = threading.Event()  # Flag para chavear audio
+    start_timer = threading.Event() # Flag para comecar video do cronometro
 
     # Estacao de cronometro comeca o video para posicionamento na tela e espera pelo evento de iniciar
     if '4' in Station_name:
         # Start the thread with the cronometer video
-        thread_chronos = threading.Thread(target=play_time, args=[e, s])
+        thread_chronos = threading.Thread(target=play_time, args=[end_room, start_timer])
         thread_chronos.start()
 
     # Estacao de comunicacao comeca a sequencia de videos para posicionamento na tela e espera pelo evento de iniciar
     if '2' in Station_name:
         # Start the screen with the start and rocket videos
-        thread_rocket = threading.Thread(target=play_rocket, args=[e, s, r, a])
-        thread_rocket.start()   
+        thread_rocket = threading.Thread(target=play_rocket, args=[start_room, end_room, show_tip, stop_siren, start_timer])
+        thread_rocket.start()
 
     # If it's not the main control computer, only start when the signal to start is sent
     if '6' not in Station_name:
@@ -475,7 +490,7 @@ if __name__ == "__main__":
             pass
 
         # Awaken both videos, chronometer and rocket
-        e.set()
+        start_room.set()
 
     # Starts a thread in the control pc and wont leave until it sends the end signal, result is saved "final_result"
     if '3' in Station_name:
@@ -494,7 +509,7 @@ if __name__ == "__main__":
         if '4' in Station_name:
             # Stop chronometer
             if stop == True:
-                s.set() # Evento para pausar o video
+                end_room.set() # Evento para pausar o video
                 while True:
                     pass
 
@@ -502,7 +517,7 @@ if __name__ == "__main__":
         if '3' in Station_name:
             # Freeze screen with current data
             if stop == True:
-                s.set() # Evento para pausar a tela
+                end.room.set() # Evento para pausar a tela
                 while True:
                     pass
 
@@ -526,13 +541,13 @@ if __name__ == "__main__":
                     # Do the transition between videos and print the 'data' variable
                     
                     # Sets the flags that start the event that switch videos and show the help message
-                    r.set()
+                    show_tip.set()
                     response = False
                 else:
                     # Change audio
                     if last_switch == '0':
                         # Turn normal audio on
-                        a.set()
+                        stop_siren.set()
 
             if '3' in Station_name:
                 # Envia a mensagem
