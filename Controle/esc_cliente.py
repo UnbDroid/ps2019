@@ -57,7 +57,7 @@ def number_print(number):
 
     for i in range(1, 8):
         for digit in number:
-            func_name = 'print_{digit}_{i}'
+            func_name = 'print_'+str(digit)+'_'+str(i)
             func = getattr(texts, func_name)
             result = func()
         print("")
@@ -68,13 +68,13 @@ def update_screen_info(ang, vel):
     texts.print_ship()
     texts.print_vel()
     # print_1_1()
-    number_print(speed)
+    number_print(vel)
     print("")
     print("")
     print("")
 
     texts.print_angle()
-    number_print(angle)
+    number_print(ang)
 
 def arduino_read(Station_name):
     try:
