@@ -20,6 +20,7 @@ need_help = False   # Asking for help
 response = False    # Response for help
 close = False       # Close connection
 data = ""           # Data transmisted between sockets
+timer_ended = False # Indicates that they lost by running out of time
 
 def clear_screen():
     os.system("clear")
@@ -212,6 +213,8 @@ def get_answer(Station_name):
             break	
 
 def play_time(end_room, start_timer):
+    global timer_ended
+    
     cap = cv2.VideoCapture('chronos.mp4') # Path to the video of the chronometer
 
     cv2.namedWindow('Tempo', cv2.WINDOW_NORMAL)
@@ -239,6 +242,14 @@ def play_time(end_room, start_timer):
             cv2.waitKey(100)
         else:
             break
+
+    # If they left the while, they lost
+    timer_ended = True
+
+    # Shows the last frame forever
+    while True:
+        cv2.imshow('Tempo', frame)
+        cv2.waitKey(100)
 
     cap.release()        
 
@@ -553,6 +564,10 @@ if __name__ == "__main__":
                 # Envia a mensagem
                 if final_result != "":
                     station_socket.send("e%s" % final_result) 
+
+            if '4' in Station_name:
+                if timer_ended:
+                    station_socket.send("e0")
 
             if '6' in Station_name:
                 msg = ""
