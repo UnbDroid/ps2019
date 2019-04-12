@@ -7,6 +7,8 @@ import time
 import os
 import threading
 import cv2
+#import pygame
+#import 
 
 # Variavel de porta do arduino
 arduino_port = '/../../dev/ttyUSB0'
@@ -14,13 +16,15 @@ arduino_port = '/../../dev/ttyUSB0'
 # Global variables
 final_result = ""   # Result of end-game button
 last_switch = '1'   # Result of 3 switches to control lamp
+send_switch = True  # Sends the result of the change onlye once
 start = False       # Start of the room
 stop = False        # Stop of the room
 need_help = False   # Asking for help
 response = False    # Response for help
 close = False       # Close connection
 data = ""           # Data transmisted between sockets
-timer_ended = False # Indicates that they lost by running out of time
+last_ang = 0
+last_vel = "000"
 
 def clear_screen():
     os.system("clear")
@@ -54,37 +58,46 @@ def get_conn():
 			return False	
 
 def number_print(number):
+    import texts
     number = str(number)
 
     for i in range(1, 8):
         for digit in number:
-            func_name = 'print_{digit}_{i}'
+            if digit not in "0123456789":
+                digit = '0'
+            func_name = 'print_'+str(digit)+'_'+str(i)
             func = getattr(texts, func_name)
             result = func()
         print("")
 
 def update_screen_info(ang, vel):
-    clear_screen()
+    import texts
 
-    texts.print_ship()
-    texts.print_vel()
-    # print_1_1()
-    number_print(speed)
-    print("")
-    print("")
-    print("")
+    global last_ang
+    global last_vel
 
-    texts.print_angle()
-    number_print(angle)
+    if ang != last_ang or vel != last_vel:
+        clear_screen()
+        texts.print_ship()
+        texts.print_vel()
+        # print_1_1()
+        number_print(vel)
+        print("")
+        print("")
+        print("")
+
+        texts.print_angle()
+        number_print(ang)
+
+        last_vel = vel
+        last_ang = ang
 
 def arduino_read(Station_name):
     try:
         import serial
     except:
         # Probably already imported
-        pass    
-    if '3' in Station_name:
-        import texts
+        pass
 
     global final_result
     global last_switch
@@ -148,19 +161,20 @@ def arduino_read(Station_name):
                     switch = read_char
 
                     if tip == '1':
-                        need_help = True     
-                        break
+                        need_help = True
+                        return
                     if switch != last_switch and last_switch == '1':
                         last_switch = switch
-                        break
+                        return
                     if response == True:
-                        break
+                        return
 
-                    last_switch = switch    
+                else:
+                    pass
 
-        elif time.time() - last_time > 5:
+        elif time.time() - last_time > 1:   # 1 second timeout
             #print("Not receiving anything!")
-            arduinoSerial.write('o')   
+            arduinoSerial.write('o') 
 
 def get_answer(Station_name):
     global data
@@ -201,8 +215,8 @@ def get_answer(Station_name):
                         # Assumes this is the response of the ask for help
                         response = True
 
-                    #elif '6' not in Station_name:            
-                    #    print "\n\033[31m" + data	+ "\033[0m\033[K"	
+                    if '6' in Station_name:            
+                        print "\n\033[31m" + data	+ "\033[0m\033[K"	
         except (KeyboardInterrupt):
             break
         except socket.error:
@@ -213,8 +227,6 @@ def get_answer(Station_name):
             break	
 
 def play_time(end_room, start_timer):
-    global timer_ended
-    
     cap = cv2.VideoCapture('chronos.mp4') # Path to the video of the chronometer
 
     cv2.namedWindow('Tempo', cv2.WINDOW_NORMAL)
@@ -242,14 +254,6 @@ def play_time(end_room, start_timer):
             cv2.waitKey(100)
         else:
             break
-
-    # If they left the while, they lost
-    timer_ended = True
-
-    # Shows the last frame forever
-    while True:
-        cv2.imshow('Tempo', frame)
-        cv2.waitKey(100)
 
     cap.release()        
 
@@ -487,7 +491,7 @@ if __name__ == "__main__":
         thread_chronos = threading.Thread(target=play_time, args=[end_room, start_timer])
         thread_chronos.start()
 
-    # Estacao de comunicacao comeca a sequencia de videos para posicionamento na tela e espera pelo evento de iniciar
+    Estacao de comunicacao comeca a sequencia de videos para posicionamento na tela e espera pelo evento de iniciar
     if '2' in Station_name:
         # Start the screen with the start and rocket videos
         thread_rocket = threading.Thread(target=play_rocket, args=[start_room, end_room, show_tip, stop_siren, start_timer])
@@ -534,10 +538,9 @@ if __name__ == "__main__":
 
         # Estacao de comunicacao verificacao de continuacao
         if '2' in Station_name:
-            # Reads arduino serial until a change in the switches ir detected or they ask for help
-            thread_serial_arduino = threading.Thread(target=arduino_read, args=[Station_name])
-            thread_serial_arduino.start()
-            thread_serial_arduino.join()
+            # Reads arduino serial until a change in the switches is detected or they ask for help
+            thread_com = threading.Thread(target=arduino_read, args=[Station_name])
+            thread_com.run()
 
         # Envia a requisicao ao servidor
         try:
@@ -550,24 +553,22 @@ if __name__ == "__main__":
                     need_help = False
                 elif response == True:
                     # Do the transition between videos and print the 'data' variable
-                    
                     # Sets the flags that start the event that switch videos and show the help message
                     show_tip.set()
                     response = False
+                    continue
                 else:
                     # Change audio
-                    if last_switch == '0':
+                    if last_switch == '0' and send_switch:
                         # Turn normal audio on
                         stop_siren.set()
+                        send_switch = False
+                        continue
 
             if '3' in Station_name:
                 # Envia a mensagem
                 if final_result != "":
                     station_socket.send("e%s" % final_result) 
-
-            if '4' in Station_name:
-                if timer_ended:
-                    station_socket.send("e0")
 
             if '6' in Station_name:
                 msg = ""
@@ -580,6 +581,7 @@ if __name__ == "__main__":
 
             # Waits for the server to answer something!
             while answered is 0:
+                print("Waiting for an answer")
                 pass
 
             time.sleep(1)

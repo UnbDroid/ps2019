@@ -7,6 +7,7 @@ import threading
 import os
 
 Stations = []
+Remove = []
 
 class Station():
     sname = "" # represents the station, "hacker", "communication", "control", "clock", "projector" or "main"
@@ -52,21 +53,36 @@ def send_error(sock):
 def send_ok(sock):
 	sock.send("Ok")	
 
+def list_remove():
+	for i in range(len(Remove)):
+		del Stations[Remove[i]]
+	del Remove[:]
+
 # Envia a todos os clientes conectados a mesma mensagem
 def Broadcast(msg):
 	for i in range(len(Stations)):
 		try:
 			Stations[i].conn.send(msg)
-		except IOError, e:
-			pass # To deal with the broken pipe problem, totally dumb way to do it though
-
-
+		except IOError:
+			# To avoid broken pipe from stoping the broadcast
+			Remove.append(i) # Flag the disconnected station for removal
+		except socket.error:
+			Remove.append(i) # Flag the disconnected station for removal
+	list_remove()
 
 # Sends a msg to a specific connected user
 def send_specific(msg, usr):
-    for i in range(len(Stations)):
+	for i in range(len(Stations)):
 		if usr in Stations[i].sname:
-			Stations[i].conn.send(msg)	
+			try:
+				Stations[i].conn.send(msg)
+			except IOError:
+				# To avoid broken pipe from stoping the broadcast
+				Remove.append(i) # Flag the disconnected station for removal
+			except socket.error:
+				Remove.append(i) # Flag the disconnected station for removal
+	
+	list_remove()				
 
 # Realiza a conexao e leitura dos diferentes clientes
 def conecta(sock):
