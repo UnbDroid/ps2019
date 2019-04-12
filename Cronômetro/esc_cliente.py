@@ -15,11 +15,8 @@ arduino_port = '/../../dev/ttyUSB0'
 
 # Global variables
 final_result = ""   # Result of end-game button
-last_switch = '1'   # Result of 3 switches to control lamp
-send_switch = True  # Sends the result of the change onlye once
 start = False       # Start of the room
 stop = False        # Stop of the room
-need_help = False   # Asking for help
 response = False    # Response for help
 close = False       # Close connection
 data = ""           # Data transmisted between sockets
@@ -92,7 +89,7 @@ def update_screen_info(ang, vel):
         last_vel = vel
         last_ang = ang
 
-def arduino_read(Station_name):
+def arduino_read(Station_name, show_tip, stop_siren):
     try:
         import serial
     except:
@@ -100,8 +97,6 @@ def arduino_read(Station_name):
         pass
 
     global final_result
-    global last_switch
-    global need_help
     global response
     global arduino_port
 
@@ -161,13 +156,12 @@ def arduino_read(Station_name):
                     switch = read_char
 
                     if tip == '1':
-                        need_help = True
                         return
-                    if switch != last_switch and last_switch == '1':
-                        last_switch = switch
-                        return
+                    if switch == '0' and not stop_siren.isSet():
+                        stop_siren.set()
                     if response == True:
-                        return
+                        show_tip.set()
+                        response = False
 
                 else:
                     pass
@@ -539,31 +533,14 @@ if __name__ == "__main__":
         # Estacao de comunicacao verificacao de continuacao
         if '2' in Station_name:
             # Reads arduino serial until a change in the switches is detected or they ask for help
-            thread_com = threading.Thread(target=arduino_read, args=[Station_name])
+            thread_com = threading.Thread(target=arduino_read, args=[Station_name, show_tip, stop_siren])
             thread_com.run()
 
         # Envia a requisicao ao servidor
         try:
             if '2' in Station_name:
-                # Envia uma mensagem de dicas ou valor dos switches
-                
-                # Pedido de dicas
-                if need_help == True:
+                # Se a thread acabou, significa pedido de dicas, envia uma mensagem pedindo
                     station_socket.send("d1")
-                    need_help = False
-                elif response == True:
-                    # Do the transition between videos and print the 'data' variable
-                    # Sets the flags that start the event that switch videos and show the help message
-                    show_tip.set()
-                    response = False
-                    continue
-                else:
-                    # Change audio
-                    if last_switch == '0' and send_switch:
-                        # Turn normal audio on
-                        stop_siren.set()
-                        send_switch = False
-                        continue
 
             if '3' in Station_name:
                 # Envia a mensagem
@@ -581,7 +558,6 @@ if __name__ == "__main__":
 
             # Waits for the server to answer something!
             while answered is 0:
-                print("Waiting for an answer")
                 pass
 
             time.sleep(1)
