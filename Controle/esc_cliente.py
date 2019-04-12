@@ -11,7 +11,7 @@ import cv2
 #import 
 
 # Variavel de porta do arduino
-arduino_port = '/../../dev/ttyUSB0'
+arduino_port = '/../../dev/ttyACM0'
 
 # Global variables
 final_result = ""   # Result of end-game button
@@ -485,7 +485,7 @@ if __name__ == "__main__":
         thread_chronos = threading.Thread(target=play_time, args=[end_room, start_timer])
         thread_chronos.start()
 
-    Estacao de comunicacao comeca a sequencia de videos para posicionamento na tela e espera pelo evento de iniciar
+    #Estacao de comunicacao comeca a sequencia de videos para posicionamento na tela e espera pelo evento de iniciar
     if '2' in Station_name:
         # Start the screen with the start and rocket videos
         thread_rocket = threading.Thread(target=play_rocket, args=[start_room, end_room, show_tip, stop_siren, start_timer])
@@ -503,7 +503,7 @@ if __name__ == "__main__":
 
     # Starts a thread in the control pc and wont leave until it sends the end signal, result is saved "final_result"
     if '3' in Station_name:
-        thread_serial_arduino = threading.Thread(target=arduino_read, args=[Station_name])
+        thread_serial_arduino = threading.Thread(target=arduino_read, args=[Station_name, show_tip, stop_siren])
         thread_serial_arduino.start()
         thread_serial_arduino.join()
         #print(final_result)

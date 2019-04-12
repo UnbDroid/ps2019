@@ -485,7 +485,7 @@ if __name__ == "__main__":
         thread_chronos = threading.Thread(target=play_time, args=[end_room, start_timer])
         thread_chronos.start()
 
-    Estacao de comunicacao comeca a sequencia de videos para posicionamento na tela e espera pelo evento de iniciar
+    #Estacao de comunicacao comeca a sequencia de videos para posicionamento na tela e espera pelo evento de iniciar
     if '2' in Station_name:
         # Start the screen with the start and rocket videos
         thread_rocket = threading.Thread(target=play_rocket, args=[start_room, end_room, show_tip, stop_siren, start_timer])
