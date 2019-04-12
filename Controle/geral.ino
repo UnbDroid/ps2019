@@ -92,37 +92,39 @@ void loop(){
 
   joystick_check();
 
+  // Serial.println(the_end);
+
   // Envia os dados seriais
   send_serial();
 }
 
 void send_serial(){
-//  int b;
-//  if(the_end){
-//    while(1){
-//      b = Serial.read();
-//      if(b > 0){
-//        Serial.write('e');
-//        if(b_valor == POT_RIGHT && VEL_RIGHT_1 == antepenultima_tecla && VEL_RIGHT_2 == penultima_tecla && VEL_RIGHT_3 == ultima_tecla){
-//          Serial.write('1');
-//        }
-//        else {
-//          Serial.write('0');
-//        }
-//      }
-//    }
-//  }
-//  else{
-//    b = Serial.read();
-//    if(b > 0){
-//      Serial.write('p');
-//      Serial.write(b_valor);
-//      Serial.write('t');
-//      Serial.write(antepenultima_tecla);
-//      Serial.write(penultima_tecla);
-//      Serial.write(ultima_tecla);
-//    }
-//  }
+  int b;
+  if(the_end){
+    while(1){
+      b = Serial.read();
+      if(b > 0){
+        Serial.write('e');
+        if(b_valor == POT_RIGHT && VEL_RIGHT_1 == antepenultima_tecla && VEL_RIGHT_2 == penultima_tecla && VEL_RIGHT_3 == ultima_tecla){
+          Serial.write('1');
+        }
+        else {
+          Serial.write('0');
+        }
+      }
+    }
+  }
+  else{
+    b = Serial.read();
+    if(b > 0){
+      Serial.write('p');
+      Serial.write(b_valor);
+      Serial.write('t');
+      Serial.write(antepenultima_tecla);
+      Serial.write(penultima_tecla);
+      Serial.write(ultima_tecla);
+    }
+  }
 }
 
 // Funcao de leitura do joystick
@@ -147,12 +149,12 @@ void joystick_check(){
 
   int result = up | right | down | left;
 
-  Serial.print("Resultado: ");
-  Serial.println(result);
-  Serial.print("Sequencia certa: ");
-  Serial.println(right_sequence[sequence]);
-  Serial.print("Valor sequencia: ");
-  Serial.println(sequence);
+//  Serial.print("Resultado: ");
+//  Serial.println(result);
+//  Serial.print("Sequencia certa: ");
+//  Serial.println(right_sequence[sequence]);
+//  Serial.print("Valor sequencia: ");
+//  Serial.println(sequence);
   
   if(result && (last_result != result) && (millis()-last_move_timestamp > 200)){
     if(right_sequence[sequence] & result){
