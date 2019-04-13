@@ -207,7 +207,8 @@ def get_answer(Station_name):
 
                     else:
                         # Assumes this is the response of the ask for help
-                        response = True
+                        if data != "Ok":
+                            response = True
 
                     if '6' in Station_name:            
                         print "\n\033[31m" + data	+ "\033[0m\033[K"	
@@ -356,7 +357,7 @@ def play_rocket(start_room, end_room, show_tip, stop_siren, start_timer):
                 frame = np.zeros((frame.shape[0], frame.shape[1], frame.shape[2]), np.uint8)
 
                 # Draw a label in the message
-                __draw_label(frame, data, (20,20), (255,0,0))
+                __draw_label(frame, data, (frame.shape[1]/2,frame.shape[0]/2), (255,0,0))
 
                 cv2.imshow('Comunicacao', frame)
                 cv2.waitKey(8000)

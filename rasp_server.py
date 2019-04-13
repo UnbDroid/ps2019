@@ -54,8 +54,10 @@ def send_ok(sock):
 	sock.send("Ok")	
 
 def list_remove():
+	cont = 0
 	for i in range(len(Remove)):
-		del Stations[Remove[i]]
+		del Stations[Remove[i]-cont]
+		cont = cont + 1
 	del Remove[:]
 
 # Envia a todos os clientes conectados a mesma mensagem
