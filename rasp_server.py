@@ -132,7 +132,7 @@ def conecta(sock):
 				send_specific("stop", '4')	# Para o cronometro
 				send_specific('e'+data[1], '2')	# Envia o sinal para chavear o video do foguete
 
-			elif data[0] == 'd':	# Pedido de dicas
+			elif data == "d1":	# Pedido de dicas
 				send_ok(sock)		# Responde ao PC que pediu dicas com um simples OK "Sua dica esta vindo"
 				send_specific("Need Help!", '6')	# Envia ao PC main o pedido de dicas
 

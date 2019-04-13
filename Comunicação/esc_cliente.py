@@ -11,7 +11,7 @@ import cv2
 #import 
 
 # Variavel de porta do arduino
-arduino_port = '/../../dev/ttyACM0'
+arduino_port = '/../../dev/ttyUSB0'
 
 # Global variables
 final_result = ""   # Result of end-game button
