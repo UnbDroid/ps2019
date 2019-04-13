@@ -20,7 +20,6 @@ stop = False        # Stop of the room
 response = False    # Response for help
 close = False       # Close connection
 data = ""           # Data transmisted between sockets
-won = -1
 last_ang = 0
 last_vel = "000"
 
@@ -226,7 +225,6 @@ def get_answer(Station_name):
     global answered
     global start
     global response
-    global won
 
     data = ""
 
@@ -258,12 +256,6 @@ def get_answer(Station_name):
                     # Mensagem de termino da sala
                     elif data == "stop":
                         stop = True
-
-                    elif data[0] == 'e' and len(data) == 2:
-                        if data[1] == '1':
-                            won = 1
-                        else:
-                            won = 0
 
                     # Assumes this is the response of the ask for help
                     else:
@@ -468,7 +460,7 @@ def play_rocket(start_room, end_room, show_tip, stop_siren):
     # End of third video
 
     # Now we make a decision based on the 'data' captured
-    if won == 1:
+    if data[1] == '1':
         # They won
         cap = cv2.VideoCapture('Good_end.mp4') # Path to the good ending video
         pygame.mixer.music.load('Good_end.wav')
@@ -477,7 +469,6 @@ def play_rocket(start_room, end_room, show_tip, stop_siren):
         cap = cv2.VideoCapture('Bad_end.mp4') # Path to the bad ending video
         pygame.mixer.music.load('Bad_end.wav')
         pygame.mixer.music.play()
-    
     while cap.isOpened():
         ret, frame = cap.read()
 
@@ -619,15 +610,13 @@ if __name__ == "__main__":
         if '3' in Station_name:
             # Freeze screen with current data
             if stop == True:
-                end_room.set() # Evento para pausar a tela
+                end.room.set() # Evento para pausar a tela
                 while True:
                     pass
 
         # Estacao de comunicacao verificacao de continuacao
         if '2' in Station_name:
             # Reads arduino serial until a change in the switches is detected or they ask for help
-            if won != -1:
-                end_room.set()
             thread_com = threading.Thread(target=arduino_read, args=[Station_name, show_tip, stop_siren])
             thread_com.run()
 

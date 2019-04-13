@@ -127,7 +127,7 @@ def conecta(sock):
 			elif data == "start":	# Unica estacao que envia "start" eh a '6'
 				Broadcast(data)	# Manda para todas as outras estacoes comecarem suas atividades
 
-			elif data[0] == 'e':	# Final da sala
+			elif data[0] == 'e' and len(data) == 2:	# Final da sala
 				send_specific("stop", '3')	# Para a atualizacao da tela de controle
 				send_specific("stop", '4')	# Para o cronometro
 				send_specific('e'+data[1], '2')	# Envia o sinal para chavear o video do foguete
