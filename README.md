@@ -55,7 +55,10 @@ Exibir na tela um vídeo com o crônometro da sala, 30 minutos em contagem regre
 Enviar o sinal de início da sala e monitorar o pedido de dicas e enviá-las quando requisitadas.
 
 ### Hardware:
+1 computador.
 
 ### Como funciona:
+Envia o sinal de "start" para todas as estações, iniciando a sala e detecta pedidos de dicas e transmite as dicas para a sala.
 
 ### Como rodar:
+Em um computador pessoal fora da sala, mas ainda conectado à rede gerada pelo raspberry, rodar o código "esc_cliente_v2.py" com o comando "python2.7 esc_cliente_v2.py" e escolher a opção 6 quando requisitado. Após garantir que todas as estações estão prontas, simplesmente escrever "start" e apertar enter, enviando o sinal de início para as estações.
