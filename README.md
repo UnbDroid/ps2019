@@ -4,6 +4,8 @@ Git utilizado para centralizar códigos e o que mais for desenvolvido para o Pro
 # Sobre o desenvolvimento:
 Para a sala onde seria realizada a dinâmica da Droid foram previstas a criação de 4 estações eletrônicas onde são permitidas interações dos jogadores, as estações desenvolvidas foram nomeadas como "Hacker", "Comunicação", "Controle" e "Cronômetro". Para finalizar a sala é necessário também um computador denominado de "Main" que controla o início da sala e o envio de dicas.
 
+# OBS: Todos os programas foram rodados e testados somente em sistema operacional do tipo GNU/Linux.
+
 ## Estação "Hacker":
 ### Função:
 Conta com uma interface simples que após ser destravada permite aos jogadores navegarem pelo suposto sistema de dados da base e adquirir diversas informações.
