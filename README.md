@@ -38,10 +38,13 @@ Enviar ao arduino o código "com.ino" na pasta "Comunicação", garantindo que a
 Exibir na tela os dados sobre angulação e velocidade de lançamento e verificar a corretude do lançamento final do foguete.
 
 ### Hardware:
+1 arduino, 1 computador, 1 monitor, 1 teclado matricial, 1 potenciômetro, 1 joystick, 1 transistor e 1 tranca indutiva.
 
 ### Como funciona:
+O arduino realiza a leitura do teclado matricial e do potênciômetro e envia esses dados constantemente para o computador via conexão serial, que atualiza os dados no monitor. O arduino realiza também a verificação da sequência do joystick e caso esta esteja correta ativa um sinal através do transistor que abre a tranca indutiva. O sinal proveniente do sistema de acionamento da estação cronômetro também é verificado pelo arduino e caso o contato seja fechado o arduino enviará o sinal de fim constantemente para o computador, para que esse transmita o sinal para toda a sala.
 
 ### Como rodar:
+Envie o código "geral.ino" na pasta "Controle" para o arduino, realizando as conexões assim como descrito no código, envie também a biblioteca keypad.zip para que o código seja executado corretamente. No computador coloque os códigos "esc_cliente_v2.py" e "texts.py" em uma mesma pasta, e, conectado à rede gerada pelo raspberry, execute o código "esc_cliente_v2.py" com a opção 3.
 
 ## Estação "Cronômetro":
 ### Função:
@@ -68,3 +71,18 @@ Envia o sinal de "start" para todas as estações, iniciando a sala e detecta pe
 
 ### Como rodar:
 Em um computador pessoal fora da sala, mas ainda conectado à rede gerada pelo raspberry, rodar o código "esc_cliente_v2.py" com o comando "python2.7 esc_cliente_v2.py" e escolher a opção 6 quando requisitado. Após garantir que todas as estações estão prontas, simplesmente escrever "start" e apertar enter, enviando o sinal de início para as estações.
+
+# Possíveis melhorias
+
+Como o código foi feito meio às pressas e baseado em um trabalho que também foi feito meio às pressas, é possível melhorar todo o trabalho realizado até aqui, tanto na parte de software como na parte de hardware para obter uma sala mais robusta e mais simples de ser utilizada, algumas das melhorias pensadas serão descritas logo a seguir:
+
+1. Além de fazer com que o raspberry gere a própria rede, pode ser feito também com que ele se conecte a uma rede já existente e funcione também como um roteador de dados, não impedindo a conexão à internet de quem estiver conectado à sua rede.
+2. Podem ser realizados projetos de placas de circuito impresso para as 4 estações a fim de facilitar o roteamento de fios e garantir uma interface eletrônica mais simples e menos susceptível a erros e ruídos, que comprometeram bastante o uso da sala em alguns instantes.
+3. Evitar o uso de um computador extra "main" para inicializar a sala.
+4. Buscar reduzir a quantidade de computadores necessários para controlar as estações.
+5. Sincronizar melhor os vídeos e áudios.
+6. Inserir a possibilidade de utilizar um projetor para transmitir parte dos vídeos.
+7. Modularizar e comentar melhor o código para uso futuro.
+8. Garantir uma interface mais simples para preparar a sala.
+9. Permitir o reinício da sala com um comando central.
+10. Facilitar o envio de dicas para a sala.
