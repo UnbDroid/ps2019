@@ -31,7 +31,7 @@ Exibir na tela os vídeos de explicação e do lançamento com áudio, transmiti
 O arduino é responsável por fazer a leitura do estado da luz de emergência e do botão de dicas e enviar esses dados ao computador. O computador roda o código de cliente para se conectar ao servidor gerado pelo raspberry e atualiza os vídeos e áudios passados no monitor e saídas de áudio.
 
 ### Como rodar:
-Enviar ao arduino o código "com.ino" na pasta "Comunicação", garantindo que a luz de emergência esteja acesa, o arduino utiliza as duas portas de interrupção 2 e 3 para realizar a leitura do botão de dicas e do nível de tensão da lâmpada utilizando um regulador de tensão para converter o 12V de alimentação da lâmpada em 5V. No computador juntar em uma mesma pasta o código "esc_cliente_v2.py" e todos os vídeos e áudios relativos à esta estação, que são todos do link **INSERIR LINK** exceto o "chronos.mp4". Após centralizar tudo isso em uma mesma pasta rodar o comando "python2.7 esc_cliente_v2.py" nessa mesma pasta e selecionar a opção "2" quando requisitado no código. Após o surgimento do frame inicial do vídeo, centralizar manualmente a janela do vídeo de maneira ótima no monitor e aguardar o comando "start" do computador main.
+Enviar ao arduino o código "com.ino" na pasta "Comunicação", garantindo que a luz de emergência esteja acesa, o arduino utiliza as duas portas de interrupção 2 e 3 para realizar a leitura do botão de dicas e do nível de tensão da lâmpada utilizando um regulador de tensão para converter o 12V de alimentação da lâmpada em 5V. No computador juntar em uma mesma pasta o código "esc_cliente_v2.py" e todos os vídeos e áudios relativos à esta estação, que são todos do link https://drive.google.com/open?id=1Zlx82hnwUo5DABXzZ38UltH5q_GbtVvR exceto o "chronos.mp4". Após centralizar tudo isso em uma mesma pasta rodar o comando "python2.7 esc_cliente_v2.py" nessa mesma pasta e selecionar a opção "2" quando requisitado no código. Após o surgimento do frame inicial do vídeo, centralizar manualmente a janela do vídeo de maneira ótima no monitor e aguardar o comando "start" do computador main.
 
 ## Estação "Controle":
 ### Função:
@@ -57,7 +57,7 @@ Exibir na tela um vídeo com o crônometro da sala, 30 minutos em contagem regre
 O computador é conectado ao monitor e controla o vídeo do cronometro. Um sistema elétrico comanda a luz laranja com um sistema redundante com os 3 switches em paralelo, assim, enquanto pelo menos 1 switch estiver ligado a lâmpada funcionará. 
 
 ### Como rodar:
-Colocar no computador o código "esc_cliente_v2.py" em uma mesma pasta com o vídeo "chronos.mp4" do link **INSERIR LINK** e utilizar o comando "python2.7 esc_cliente_v2.py" e selecionar a opção 4 quando requisitado (Para utilizar juntamente com outra estação inserir o número 4 no código de seleção). Posicionar a tela com o primeiro frame no centro do monitor e esperar o sinal de início do computador main.
+Colocar no computador o código "esc_cliente_v2.py" em uma mesma pasta com o vídeo "chronos.mp4" do link https://drive.google.com/open?id=1Zlx82hnwUo5DABXzZ38UltH5q_GbtVvR e utilizar o comando "python2.7 esc_cliente_v2.py" e selecionar a opção 4 quando requisitado (Para utilizar juntamente com outra estação inserir o número 4 no código de seleção). Posicionar a tela com o primeiro frame no centro do monitor e esperar o sinal de início do computador main.
 
 ## Computador "Main":
 ### Função:
